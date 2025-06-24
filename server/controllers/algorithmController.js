@@ -1,10 +1,11 @@
 const AlgorithmModel = require('../models/algorithmModel');
+const humps = require('humps');
 
 const AlgorithmController = {
     getMaxAlgorithm: async (req, res) => {
         try {
             const result = await AlgorithmModel.getMaxAlgorithm();
-            res.json(result);
+            res.json(humps.camelizeKeys(result));
         } catch (err) {
             res.status(500).json({ error: err.message });
         }
@@ -13,7 +14,7 @@ const AlgorithmController = {
     getMinAlgorithm: async (req, res) => {
         try {
             const result = await AlgorithmModel.getMinAlgorithm();
-            res.json(result);
+            res.json(humps.camelizeKeys(result));
         } catch (err) {
             res.status(500).json({ error: err.message });
         }
@@ -22,7 +23,7 @@ const AlgorithmController = {
     getBestAlgorithm: async (req, res) => {
         try {
             const result = await AlgorithmModel.getBestAlgorithm();
-            res.json(result);
+            res.json(humps.camelizeKeys(result));
         } catch (err) {
             res.status(500).json({ error: err.message });
         }
@@ -31,7 +32,7 @@ const AlgorithmController = {
     getWorstAlgorithm: async (req, res) => {
         try {
             const result = await AlgorithmModel.getWorstAlgorithm();
-            res.json(result);
+            res.json(humps.camelizeKeys(result));
         } catch (err) {
             res.status(500).json({ error: err.message });
         }
