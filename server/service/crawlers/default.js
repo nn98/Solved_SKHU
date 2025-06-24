@@ -44,6 +44,7 @@ class WaitNotify {
  * @returns {Promise<Array>} - 채점 결과가 포함된 학생 객체 리스트
  */
 async function crawlAssignmentStatus(ID_LIST, pID, deadLine) {
+    console.log('at crawlAssignmentStatus', ID_LIST, pID, deadLine);
     let assignment_Result = [];
     let parallelizationControl = [
         { AsyncTaskExecute: false, waitNotify: new WaitNotify(), fin: false },
@@ -66,6 +67,7 @@ async function crawlAssignmentStatus(ID_LIST, pID, deadLine) {
           '&user_id=' +
           processID +
           '&language_id=-1&result_id=-1';
+        console.log('url',url)
         await execute(ID_LIST, pID, deadLine, processID, url, assignment_Result, flag);
     };
 
@@ -83,15 +85,23 @@ async function crawlAssignmentStatus(ID_LIST, pID, deadLine) {
                 await parallelizationControl[flag].waitNotify.wait();
             }
             parallelizationControl[flag].AsyncTaskExecute = true;
+
             const browser = await puppeteer.launch({
-                headless: true,
+                headless: "new",
                 args: ['--no-sandbox', '--disable-setuid-sandbox'],
             });
             const page = await browser.newPage();
-            await page.setDefaultNavigationTimeout(0);
+            await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36');
+            await page.setExtraHTTPHeaders({
+                'Accept-Language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+                'Referer': 'https://www.acmicpc.net/'
+            });
             await page.goto(url, { waitUntil: 'networkidle2', timeout: 0 });
+            // await page.waitForSelector('tr', { timeout: 5000 }); // tr 태그가 생길 때까지 대기
 
             const content = await page.content();
+            console.log('content',content);
             const $ = cheerio.load(content);
             const lists = $('tr');
             let returnData = [];
@@ -136,6 +146,7 @@ async function crawlAssignmentStatus(ID_LIST, pID, deadLine) {
             await browser.close();
             await isFinish(ID_LIST, pID, deadLine, assignment_Result, flag);
         } catch (error) {
+            console.log('error in crawlAssignmentStatus, error :', error);
             ID_LIST[0].result = 0;
             ID_LIST[0].status = '';
             assignment_Result.push(ID_LIST.shift());

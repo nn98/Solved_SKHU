@@ -1,8 +1,9 @@
+// routes/assignments.js
 const express = require('express');
 const router = express.Router();
-const controller = require('../controllers/assignmentsController');
+const AssignmentsController = require('../controllers/assignmentsController');
 
-router.get('/', controller.getAssignments);
-router.post('/', controller.postAssignments);
+router.get('/', AssignmentsController.getAssignments);
+router.post('/', AssignmentsController.postAssignments);
 
 module.exports = router;

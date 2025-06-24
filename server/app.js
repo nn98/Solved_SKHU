@@ -37,7 +37,7 @@ let AssignTaskExecute_StudentRegister = false; // - waitNotify_StudentRegister
 const waitNotify_UserRegister = new WaitNotify(); // AssignTaskExecute_UserRegister
 let AssignTaskExecute_UserRegister = false; // - waitNotify_UserRegister
 
-app.get('/', (req, res) => { res.send('working?'); });
+app.get('/', (req, res) => { res.send('어떤 조실부모한 후레호로년이 이것저것 찔러보니 뒤질래?'); });
 
 const algorithmRouter = require('./routes/algorithm');
 app.use('/algorithm', algorithmRouter);
